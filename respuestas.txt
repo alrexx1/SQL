@@ -1,0 +1,79 @@
+Ejercicio 1 
+
+SELECT
+    TO_CHAR(t_rut, '99g999g999') || '-' || t_dv AS "Run",
+    t_nombre || ' ' || t_apellido_paterno || ' ' || t_apellido_materno AS "Nombre Completo",
+    TO_CHAR(t_fecha_nacimiento, 'DD/MM/YYYY') AS "Fecha Nacimiento",
+    '$' || TO_CHAR(t_sueldo, '9g999g999') AS "Sueldo",
+    CASE
+        WHEN t_sueldo <= 450000 THEN TO_CHAR(60000, 'L99g999')
+         WHEN t_sueldo >= 1000000 THEN TO_CHAR(substr((t_sueldo / 100) * (t_sueldo / 10000),1,5), '99g999') 
+            WHEN t_sueldo < 1000000 THEN TO_CHAR(substr((t_sueldo /10)*t_sueldo,1,5), 'L99g999')
+    END AS "Bono"
+FROM
+    trabajador
+
+order by "Bono" desc;
+
+
+
+Ejercicio 2 
+
+
+
+
+
+
+
+ejercicio 3 
+
+SELECT
+    to_char(a_RUT,'99g999g999')||'-'||a_dv AS "RUT",
+    a_nombres||' '|| a_apellido_Paterno||' '||A_apellido_Materno AS "Nombre Completo",
+    a_Tipo_Alumno AS "Tipo de Alumno",
+    to_char(a_sueldo,'L9g999g999'),
+    CASE WHEN a_Telefono IS NOT NULL THEN a_Telefono ELSE 'NO POSEE TELÉFONO PARA CONTACTARLO' END AS "Teléfono"   
+FROM
+    Alumno
+where 
+a_sueldo >= 850000
+
+ORDER BY
+    "RUT" desc;
+
+
+ejercicio 4 
+
+SELECT
+    'El profesor ' || p_nombre || ' ' || p_apellido_paterno || ' ' || p_apellido_materno || 
+    ' estuvo de cumpleaños el ' || EXTRACT(DAY FROM p_fecha_nacimiento) || ' de ' || TO_CHAR(p_fecha_nacimiento, 'Month') ||
+    'y cumplió ' || ROUND(months_between(sysdate, p_fecha_nacimiento)/12) || ' años' AS "Listado de cumpleaños"
+FROM
+    profesor
+
+
+ejercicio 5 
+
+
+SELECT
+    to_char(p_rut, '99g999g999') || '-' || p_dv as "RUT del Profesor",
+    p_nombre || ' ' || p_apellido_paterno || ' ' || p_apellido_materno as "Nombre Completo",
+    round(months_between(sysdate, p_fecha_contrato) / 12) as "Años Trabajados",
+    to_char(p_sueldo, 'L9g999g999') as "Sueldo Actual",
+    CASE
+        WHEN round(months_between(sysdate, p_fecha_contrato) / 12) >= 5 THEN
+            to_char(p_sueldo * ((round(months_between(sysdate, p_fecha_contrato) / 12) * 0.01)), 'L9g999g999')
+        ELSE
+            to_char(p_sueldo, 'L9g999g999')
+    END as "Aumento",
+    CASE
+        WHEN round(months_between(sysdate, p_fecha_contrato) / 12) >= 5 THEN
+            to_char(p_sueldo * (1 + (round(months_between(sysdate, p_fecha_contrato) / 12) * 0.01)), 'L9g999g999')
+        ELSE
+            to_char(p_sueldo, 'L9g999g999')
+    END as "Sueldo Reajustado"
+FROM
+    profesor
+ORDER BY
+    p_sueldo ASC;
+
